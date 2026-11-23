@@ -445,9 +445,11 @@ footer.site{background:var(--n-bg);color:var(--n-ink)}
 .foot p{color:var(--n-ink-2);max-width:32ch;margin-top:12px}
 .foot .brand{min-height:0}
 .legal{padding-top:20px;padding-bottom:32px;box-shadow:inset 0 1px 0 var(--n-line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:.875rem;color:var(--n-ink-2)}
-.bubble{position:fixed;right:20px;bottom:20px;z-index:60;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 20px 0 16px;border-radius:24px;background:var(--wa);color:var(--wa-ink);text-decoration:none;font-weight:500;box-shadow:0 8px 24px rgba(11,46,26,.22),0 1px 2px rgba(11,46,26,.2);transition:background-color .15s var(--ease),transform .15s var(--ease)}
+.bubble{position:fixed;right:20px;bottom:20px;z-index:60;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 20px 0 16px;border-radius:24px;background:var(--wa);color:var(--wa-ink);text-decoration:none;font-weight:500;box-shadow:0 6px 20px rgba(31,27,22,.18),0 1px 2px rgba(31,27,22,.16);transition:background-color .15s var(--ease),opacity .25s var(--ease),transform .25s var(--ease)}
+.js .bubble{opacity:0;transform:translateY(8px);visibility:hidden;transition:background-color .15s var(--ease),opacity .25s var(--ease),transform .25s var(--ease),visibility 0s .25s}
+.js .bubble.show{opacity:1;transform:none;visibility:visible;transition-delay:0s}
 .bubble:hover{background:#3ee07a;color:var(--wa-ink)}
-.bubble:active{transform:scale(.97)}
+.bubble.show:active{transform:scale(.97)}
 .bubble .ic{width:20px;height:20px;stroke-width:2}
 @media (max-width:560px){.bubble span{display:none}.bubble{padding:0;width:52px;justify-content:center;border-radius:50%}}
 
@@ -533,3 +535,38 @@ footer.site{background:var(--n-bg);color:var(--n-ink)}
 .facts .summit,.trek-index .summit{white-space:normal}
 .facts .summit{display:inline-flex}
 @media (max-width:520px){.trek-index .summit{min-width:0;text-align:right}}
+
+/* ---------- scroll landscape: ridges and clouds ---------- */
+.ridges{position:relative;height:clamp(150px,20vw,300px);margin-top:-1px;margin-bottom:-1px;overflow:hidden;background:var(--sky);pointer-events:none;contain:paint}
+.rg{position:absolute;left:-4%;right:-4%;bottom:0;will-change:transform}
+.rg svg{display:block;width:100%;height:100%}
+.rg0{top:0;bottom:-28%}.rg0 path{fill:color-mix(in oklab,var(--land) 30%,var(--sky))}
+.rg1{top:14%;bottom:-20%}.rg1 path{fill:color-mix(in oklab,var(--land) 62%,var(--sky))}
+.rg2{top:36%}.rg2 path{fill:var(--land)}
+.ridges .cl{position:absolute;display:block;border-radius:50%;will-change:transform;
+  background:radial-gradient(closest-side,var(--cloud) 0,color-mix(in oklab,var(--cloud) 60%,transparent) 45%,transparent 100%)}
+.ridges{--cloud:color-mix(in oklab,var(--card) 70%,transparent)}
+.ridges-snow{--cloud:rgba(253,251,247,.16)}
+.ridges .cl1{width:38%;height:28%;left:6%;top:46%}
+.ridges .cl2{width:30%;height:22%;left:58%;top:34%}
+.ridges .cl3{width:24%;height:18%;left:34%;top:58%}
+.ridges-dusk .cl,.ridges-night .cl{opacity:.55}
+
+/* morning mist drifting across the hero photo */
+.hero-bg{will-change:transform}
+.hero-mist{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.hero-mist .cl{position:absolute;display:block;border-radius:50%;will-change:transform;
+  background:radial-gradient(closest-side,rgba(247,244,238,.22),rgba(247,244,238,.08) 55%,transparent)}
+.hero-mist .cl1{width:70%;height:34%;left:-10%;top:52%}
+.hero-mist .cl2{width:56%;height:26%;left:48%;top:30%}
+
+@media (prefers-reduced-motion:reduce){.rg,.ridges .cl,.hero-bg,.hero-mist .cl{transform:none!important}}
+
+/* ridges rising out of the hero photo into the page */
+.ridges-hero{position:absolute;left:0;right:0;bottom:-1px;height:clamp(72px,10vw,150px);background:none;z-index:0}
+.ridges-hero .rg0 path{fill:color-mix(in oklab,var(--land) 22%,transparent)}
+.ridges-hero .rg1 path{fill:color-mix(in oklab,var(--land) 48%,transparent)}
+.ridges-hero .cl{display:none}
+.hero-copy{padding-bottom:calc(clamp(64px,9vw,112px) + clamp(48px,6vw,96px))}
+/* last light on the far peaks above the dark section */
+.ridges-dusk .rg0 path{fill:color-mix(in oklab,color-mix(in oklab,var(--land) 30%,var(--sky)) 84%,var(--acc))}

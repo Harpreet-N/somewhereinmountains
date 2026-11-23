@@ -197,6 +197,46 @@ var navRaf=0;
 window.addEventListener('scroll',function(){if(!navRaf)navRaf=requestAnimationFrame(function(){navRaf=0;paintNav()})},{passive:true});
 paintNav();
 
+/* ---------- WhatsApp bubble: only when no other WhatsApp action is on screen ---------- */
+var bub=$('.bubble');
+if(bub){
+  var busy=$$('.hero,.page-head,.book-card,.cta-box,.card-wa,form,footer.site');
+  if('IntersectionObserver' in window&&busy.length){
+    var seen=new Set();
+    var bio=new IntersectionObserver(function(es){es.forEach(function(en){en.isIntersecting?seen.add(en.target):seen.delete(en.target)});bub.classList.toggle('show',seen.size===0)});
+    busy.forEach(function(el){bio.observe(el)});
+  }else bub.classList.add('show');
+}
+
+/* ---------- scroll landscape: ridges rise at different speeds, clouds drift ---------- */
+if(!reduced){
+  var scenes=$$('.ridges').map(function(el){return {el:el,layers:$$('[data-depth]',el),clouds:$$('[data-drift]',el)}});
+  var hero=$('.hero'), heroBg=hero&&$('.hero-bg',hero), mist=hero?$$('.hero-mist [data-drift]',hero):[];
+  var land=0;
+  var paintLand=function(){
+    land=0; var vh=innerHeight, vw=innerWidth;
+    scenes.forEach(function(s){
+      var r=s.el.getBoundingClientRect();
+      if(r.bottom<-80||r.top>vh+80) return;
+      // p: 1 when the band enters at the bottom, 0 mid-screen, -1 as it leaves the top
+      var p=((r.top+r.height/2)-vh/2)/(vh/2+r.height/2);
+      s.layers.forEach(function(l){l.style.transform='translate3d(0,'+(p*parseFloat(l.dataset.depth)*r.height*.6).toFixed(1)+'px,0)'});
+      s.clouds.forEach(function(c){c.style.transform='translate3d('+(p*parseFloat(c.dataset.drift)*vw*.12).toFixed(1)+'px,'+(p*r.height*.18).toFixed(1)+'px,0)'});
+    });
+    if(heroBg){
+      var hr=hero.getBoundingClientRect();
+      if(hr.bottom>0){
+        var t=Math.min(1,Math.max(0,-hr.top/hr.height));
+        heroBg.style.transform='translate3d(0,'+(t*hr.height*.28).toFixed(1)+'px,0) scale('+(1+t*.06).toFixed(4)+')';
+        mist.forEach(function(c){c.style.transform='translate3d('+(t*parseFloat(c.dataset.drift)*vw*.18).toFixed(1)+'px,'+(-t*40).toFixed(1)+'px,0)'});
+      }
+    }
+  };
+  window.addEventListener('scroll',function(){if(!land)land=requestAnimationFrame(paintLand)},{passive:true});
+  window.addEventListener('resize',function(){if(!land)land=requestAnimationFrame(paintLand)});
+  paintLand();
+}
+
 /* ---------- reveal on scroll ---------- */
 if('IntersectionObserver' in window&&!reduced){
   var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}})},{rootMargin:'0px 0px -6% 0px',threshold:.05});
