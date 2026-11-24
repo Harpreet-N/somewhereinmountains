@@ -191,6 +191,10 @@ a,button,label,input,select,textarea{touch-action:manipulation;-webkit-tap-highl
 .svc-card p{color:var(--ink-2)}
 .svc-card .meta{margin-top:auto;padding-top:12px;display:flex;justify-content:space-between;align-items:center}
 .svc-card .link-arrow{font-size:.9375rem}
+.svc-card.has-thumb{padding-top:12px}
+.svc-thumb{display:block;margin:0 -16px 12px;height:148px;border-radius:var(--r-img);overflow:hidden;background:var(--sunk)}
+.svc-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.svc-card:hover .svc-thumb img{transform:scale(1.02)}
 
 /* trek index (signature: summit markers) */
 .trek-index{margin-top:56px}
