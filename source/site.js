@@ -111,8 +111,9 @@ if(filters){
   filters.addEventListener('submit',function(e){e.preventDefault()});
   filters.addEventListener('reset',function(){setTimeout(function(){apply(false)},0)});
   $('#emptyReset').addEventListener('click',function(){filters.reset();setTimeout(function(){apply(false);$('#ft-type').focus()},0)});
-  var h=(location.hash||'').slice(1); if(/^(trek|raft|safari)$/.test(h)){$('#ft-type').value=h}
-  apply(false);
+  var fromHash=function(){var h=(location.hash||'').slice(1); if(/^(trek|raft|safari)$/.test(h)){$('#ft-type').value=h;apply(false)}};
+  window.addEventListener('hashchange',fromHash);
+  apply(false); fromHash();
 }
 
 /* ---------- plan your trip: inquiry → WhatsApp / email / copy ---------- */
@@ -149,19 +150,21 @@ if(plan){
     if(first) first.focus();
     return ok;
   }
+  /* tests can replace window.smOpen to check the URL without opening anything */
+  function openExt(u,newTab){if(window.smOpen)return window.smOpen(u,newTab);if(newTab)window.open(u,'_blank','noopener');else location.href=u}
   function say(html){status.innerHTML=html;status.hidden=false;status.focus()}
   function send(kind){
     if(!valid()) return;
     var body=message(), trekId=trekSel.value;
     if(kind==='wa'){
       var url='https://wa.me/'+plan.dataset.wa+'?text='+encodeURIComponent(body);
-      var w=window.open(url,'_blank','noopener');
+      openExt(url,true);
       say('<b>WhatsApp should open in a new tab with your message.</b> It isn\'t sent until you press send there. Nothing opened? <a href="'+url+'" target="_blank" rel="noopener">Open WhatsApp again</a>, or copy the message and send it to '+plan.dataset.waDisplay+'.');
       track('inquiry_whatsapp_clicked',{trek:trekId});
     }else if(kind==='email'){
       var subj='Trek inquiry: '+(trekId&&trekId!=='custom'?NAMES[trekId]:'help me choose a trek');
       var mail='mailto:'+plan.dataset.email+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
-      location.href=mail;
+      openExt(mail,false);
       say('<b>Your email app should open with the message ready.</b> It isn\'t sent until you press send there. If no email app opens, copy the message and send it to <a href="mailto:'+plan.dataset.email+'">'+plan.dataset.email+'</a>.');
       track('inquiry_email_clicked',{trek:trekId});
     }else{

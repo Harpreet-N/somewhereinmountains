@@ -299,13 +299,13 @@ def trip_card(t, i=0, heading="h3"):
   </article>
 </li>'''
 
-def faq_list(items, prefix="f", first_open=True):
+def faq_list(items, prefix="f", first_open=True, level=3):
     PLUS = icon("plus", "ic plus") + icon("minus", "ic minus")
     out = []
     for i, it in enumerate(items):
         q, a = it[0], it[1]
         o = first_open and i == 0
-        out.append(f'<div class="faq-item"><h3><button type="button" id="{prefix}b{i}" aria-expanded="{str(o).lower()}" aria-controls="{prefix}p{i}"><span>{e(q)}</span><span class="ico">{PLUS}</span></button></h3>'
+        out.append(f'<div class="faq-item"><h{level}><button type="button" id="{prefix}b{i}" aria-expanded="{str(o).lower()}" aria-controls="{prefix}p{i}"><span>{e(q)}</span><span class="ico">{PLUS}</span></button></h{level}>'
                    f'<div class="faq-panel{" open" if o else ""}" id="{prefix}p{i}" role="region" aria-labelledby="{prefix}b{i}"><div><p>{e(a)}</p></div></div></div>')
     return f'<div class="faq-list" data-acc>{"".join(out)}</div>'
 
@@ -501,7 +501,7 @@ def build_tours():
 <section class="wrap sec-sm" aria-labelledby="cmp-h">
   <h2 class="h3" id="cmp-h" data-reveal>Compare all trips</h2>
   <p class="lede cmp-note">Prices depend on your group size, season and route, so every trip is quoted personally.</p>
-  <div class="scroll-x cmp-wrap" tabindex="0" role="region" aria-labelledby="cmp-h">
+  <div class="scroll-x cmp-wrap" tabindex="0" role="region" aria-label="Comparison table, scrollable">
     <table class="cmp"><caption class="sr">Duration, difficulty, highest point, who it suits and price for every trip</caption>
       <thead><tr><th scope="col">Trip</th><th scope="col">Duration</th><th scope="col">Difficulty</th><th scope="col">Highest point</th><th scope="col">Good for</th><th scope="col">Price</th></tr></thead>
       <tbody>{rows}</tbody></table>
@@ -632,7 +632,7 @@ def build_trip(t):
 {rev_html}
 <section class="wrap sec-sm" aria-labelledby="rel-h" style="padding-bottom:var(--sec)"><h2 class="h3" id="rel-h" data-reveal style="margin-bottom:24px">You might also like</h2><ul class="tgrid tgrid-3">{"".join(trip_card(r, i) for i, r in enumerate(related))}</ul></section>
 {final_cta(f"Ready for the {t['short']}?", "Send your dates and group size, and Jenish replies with a day-by-day plan and a price for your group.", t, "Request a Personalised Quote")}'''
-    qbar = f'''<div class="qbar" id="qbar"><a class="btn btn-primary" href="{plan_link(t["id"])}" data-track="trek_quote_clicked" data-trek="{t["id"]}">Request a Quote</a><a class="btn btn-secondary" href="{wa(msg)}" target="_blank" rel="noopener" aria-label="Ask Jenish a question on WhatsApp (opens in new tab)">{icon("message-circle")}Ask</a></div>'''
+    qbar = f'''<aside class="qbar" id="qbar" aria-label="Quick actions for this trip"><a class="btn btn-primary" href="{plan_link(t["id"])}" data-track="trek_quote_clicked" data-trek="{t["id"]}">Request a Quote</a><a class="btn btn-secondary" href="{wa(msg)}" target="_blank" rel="noopener" aria-label="Ask Jenish a question on WhatsApp (opens in new tab)">{icon("message-circle")}Ask</a></aside>'''
     trip_ld = {"@context": "https://schema.org", "@type": "TouristTrip", "name": t["title"], "description": t["meta"], "url": url(t["slug"] + ".html"),
                "image": url("img/" + t["img"] + ".jpg"), "touristType": e(t["for"]),
                "provider": {"@type": "TravelAgency", "@id": BUSINESS["@id"], "name": SITE_NAME},
@@ -773,7 +773,7 @@ def build_faq():
     body = plain_head("Questions and answers", "Straight answers about planning, booking, permits, altitude and what to bring. Can't find yours? Just ask.", crumbs(cr),
                       f'<p class="acts"><a class="btn btn-secondary btn-sm" href="{wa("Namaste Jenish! I have a question.")}" target="_blank" rel="noopener">{icon("message-circle")}Ask on WhatsApp{EXT}</a><a class="btn btn-secondary btn-sm" href="mailto:{EMAIL}?subject={quote("Question about trekking in Nepal")}">{icon("mail")}Email Jenish</a></p>') + f'''
 <section class="wrap sec-sm faq-page" aria-label="All questions">
-  {faq_list(FAQS, "q")}
+  {faq_list(FAQS, "q", True, 2)}
 </section>
 {final_cta()}'''
     return page("faq.html", "Nepal Trekking FAQ: Permits, Altitude, Costs and Booking | Somewhere in Mountains",
