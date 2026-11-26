@@ -121,8 +121,14 @@ trip; unknown values fall back to "I'm not sure yet". The old `contact.html` red
 The form logic is in `source/site.js` (section "plan your trip"). Messages are plain text and
 URL-encoded, so special characters are safe.
 
-## Analytics
+## Cookies and analytics
 
-No analytics is installed. `site.js` sends privacy-safe events (trip IDs, filter values,
-never names or messages) to `window.smTrack`, and forwards them to Plausible automatically if
-its script is added. Add a provider only after updating the privacy policy.
+The site sets no cookies, stores nothing in the browser and loads nothing from other
+companies, so it needs no cookie banner (see privacy policy section 3). The footer links
+"No cookies, no tracking" to that section.
+
+To add analytics later, set `ANALYTICS` in `source/data.py` (`"plausible:yourdomain.com"` or
+`"vercel"`), update the privacy policy, and rebuild. A consent banner then appears
+automatically; nothing loads until the visitor clicks "Allow analytics", and the footer gets
+a "Privacy settings" link to change the choice. `site.js` also sends privacy-safe events
+(trip IDs and filter values, never names or messages) through `window.smTrack`.

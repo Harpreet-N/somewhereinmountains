@@ -12,6 +12,13 @@ EMAIL = "jenishmaharjan26@gmail.com"
 INSTAGRAM = "https://www.instagram.com/somewhereinmountains/"
 INSTAGRAM_HANDLE = "@somewhereinmountains"
 
+# Analytics: off. The site sets no cookies, so it shows no consent banner.
+# To add analytics later, set one of these and update the privacy policy (legal_body.html):
+#   ANALYTICS = "plausible:somewhereinmountains.com"   # Plausible, loaded only after consent
+#   ANALYTICS = "vercel"                               # Vercel Web Analytics, loaded only after consent
+# A consent banner then appears automatically and nothing loads until the visitor agrees.
+ANALYTICS = ""
+
 # ---------------------------------------------------------------------------
 # REVIEWS — newest first. Only publish reviews the guest agreed to share.
 # stars: 1–5 · when: "YYYY-MM"

@@ -7,6 +7,26 @@ var MONTHS=['January','February','March','April','May','June','July','August','S
 function copyBtn(btn,ta,label){var ok=function(){btn.textContent='Copied';setTimeout(function(){btn.textContent=label},1800)};try{navigator.clipboard.writeText(ta.value).then(ok,function(){ta.select()})}catch(_){ta.select()}}
 function monthLabel(v){if(!v)return '';var p=v.split('-');return MONTHS[(+p[1]||1)-1].slice(0,3)+' '+p[0]}
 
+/* ---------- consent (only active when ANALYTICS is set in data.py) ----------
+   Nothing is loaded and nothing is stored until the visitor chooses.
+   The choice itself is kept in localStorage so the question isn't repeated. */
+var AN=document.body.dataset.analytics||'';
+if(AN){
+  var cb=$('#consent'), KEY='sm-consent';
+  var load=function(){
+    if(window.__smAnalytics) return; window.__smAnalytics=true;
+    var sc=document.createElement('script'); sc.defer=true;
+    if(AN.indexOf('plausible:')===0){sc.src='https://plausible.io/js/script.js';sc.setAttribute('data-domain',AN.slice(10))}
+    else if(AN==='vercel'){sc.src='/_vercel/insights/script.js'}
+    else return;
+    document.head.appendChild(sc);
+  };
+  var choice=null; try{choice=localStorage.getItem(KEY)}catch(_){}
+  if(choice==='yes') load(); else if(choice!=='no'&&cb) cb.hidden=false;
+  if(cb) cb.addEventListener('click',function(e){var b=e.target.closest('[data-consent]');if(!b)return;try{localStorage.setItem(KEY,b.dataset.consent)}catch(_){}cb.hidden=true;if(b.dataset.consent==='yes')load()});
+  $$('[data-consent-open]').forEach(function(b){b.addEventListener('click',function(){cb.hidden=false;$('[data-consent="yes"]',cb).focus()})});
+}
+
 /* ---------- privacy-friendly event hook ----------
    No analytics provider is loaded. If one is added later (for example Plausible or
    Vercel Web Analytics), connect it here. Never pass names, emails or messages. */

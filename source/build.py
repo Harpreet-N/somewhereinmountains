@@ -187,7 +187,7 @@ def page(fname, title, desc, body, active="", jsonld=None, hero=True, og_img="og
 <link rel="stylesheet" href="site.css">
 {ld}
 </head>
-<body class="{'has-hero' if hero else 'no-hero'}{' has-qbar' if qbar else ''}">
+<body class="{'has-hero' if hero else 'no-hero'}{' has-qbar' if qbar else ''}"{f' data-analytics="{e(ANALYTICS)}"' if ANALYTICS else ''}>
 <a class="skip" href="#main">Skip to content</a>
 <header class="nav" id="nav">
   <div class="wrap nav-row">
@@ -208,6 +208,7 @@ def page(fname, title, desc, body, active="", jsonld=None, hero=True, og_img="og
 </main>
 {footer()}
 {qbar}
+{consent_html()}
 <script src="site.js" defer></script>
 </body>
 </html>
@@ -231,9 +232,18 @@ def footer():
       <a href="{INSTAGRAM}" target="_blank" rel="noopener">{icon("instagram")}{INSTAGRAM_HANDLE}<span class="sr"> on Instagram (opens in new tab)</span></a>
       <span class="addr">{icon("map-pin")}Thamel, Kathmandu and Lakeside, Pokhara</span></address>
   </div>
-  <div class="wrap legal"><span>© 2026 {SITE_NAME}</span><span>An inquiry is not a booking. No payment is taken on this website.</span></div>
+  <div class="wrap legal"><span>© 2026 {SITE_NAME}</span><span>{"<button class=linkbtn type=button data-consent-open>Privacy settings</button> · " if ANALYTICS else '<a href="legal.html#privacy">No cookies, no tracking</a> · '}An inquiry is not a booking. No payment is taken on this website.</span></div>
   <a class="bubble" href="{wa("Namaste Jenish! I'd like to ask about a trip.")}" target="_blank" rel="noopener" aria-label="Chat with Jenish on WhatsApp (opens in new tab)">{icon("message-circle")}<span>Chat on WhatsApp</span></a>
 </footer>'''
+
+def consent_html():
+    """Consent banner, only rendered when ANALYTICS is set in data.py."""
+    if not ANALYTICS: return ""
+    return f'''<section class="consent" id="consent" aria-labelledby="consent-h" hidden>
+  <h2 id="consent-h">Can we count your visit?</h2>
+  <p>We'd like to use privacy-friendly analytics to see which pages help travellers. It only runs if you agree, and you can change your mind any time. <a href="legal.html#privacy">Privacy policy</a></p>
+  <div class="acts"><button class="btn btn-primary btn-sm" type="button" data-consent="yes">Allow analytics</button><button class="btn btn-secondary btn-sm" type="button" data-consent="no">No, thanks</button></div>
+</section>'''
 
 def photo_hero(img_name, alt, h1, sub="", top="", cta="", cls="hero-sub"):
     _LCP["img"] = img_name

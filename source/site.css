@@ -790,3 +790,11 @@ footer.site nav{display:flex;flex-direction:column}
 .foot .btn-light{display:inline-flex;align-self:flex-start;color:var(--ink);min-height:44px}
 .foot .btn-light:hover{color:var(--ink);text-decoration:none}
 .faq-page,section.rev{padding-bottom:var(--sec)}
+
+/* consent banner (only rendered when analytics is switched on) */
+.consent{position:fixed;left:var(--s4);right:var(--s4);bottom:var(--s4);z-index:70;max-width:560px;display:flex;flex-direction:column;gap:var(--s3);padding:var(--s5) var(--s6);border-radius:var(--r-card);background:var(--card);box-shadow:inset 0 0 0 1px var(--line-2),var(--sh-2)}
+.consent[hidden]{display:none}
+.consent h2{font:400 1.25rem/1.2 var(--serif)}
+.consent p{font-size:.9375rem;color:var(--ink-2)}
+.linkbtn{appearance:none;border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;cursor:pointer;min-height:24px}
+.legal a{color:inherit}
